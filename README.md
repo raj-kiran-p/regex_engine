@@ -14,13 +14,9 @@
   <a href="https://github.com/raj-kiran-p/regex_engine">
     <img src="https://static.wixstatic.com/media/03a041_a8d70333218e4f2691fb6a30d7219923~mv2.png/v1/fill/w_200,h_200/regex-engine.png" alt="Logo" width="160" height="160">
   </a>
-
   <h3 align="center">Regex Engine</h3>
-
   <p align="center">
     An awesome package to generate regex
-    <br />
-    <br />
     <a href="https://github.com/raj-kiran-p/regex_engine/issues">Report Bug</a>
     ·
     <a href="https://github.com/raj-kiran-p/regex_engine/issues">Request Feature</a>
@@ -33,7 +29,7 @@
 ## Table of Contents
 
 * [About the Project](#about-the-project)
-  * [Coded With](#coded-with-language)
+  * [Coded With Language](#coded-with-language)
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
@@ -54,7 +50,9 @@ Generating regex can sometimes be complicated. That is why we are introducing th
 Supported functionalities : 
 - Regex Generation for Numerical Range
 
-1. __Regex Generation for Numerical Range__   
+### What does each functionalities do?
+
+__1. Regex Generation for Numerical Range__   
 
 Generate regex given a numerical range, So when given a new number between this range the regex will match.
 
@@ -88,7 +86,7 @@ pip install regex-engine
 
 ### 1. Regex Generation for Numerical Range
 
-__You get what you give.__ : If given numbers are integers you get a regex that will only match with integer and if floating-point numbers are given it only match with floating-point number.
+__You get what you give :__ If given numbers are integers you get a regex that will only match with integer and if floating-point numbers are given it only match with floating-point number.
 
 Supports integer and floating-point numbers. It can even be a negative range.
 
@@ -143,10 +141,9 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Raj Kiran P - [@raj_kiran_p](http://www.twitter.com/raj_kiran_p) - rajkiranjp@gmail.com
-
-GitHub : [https://github.com/raj-kiran-p](https://github.com/raj-kiran-p)
-
+Raj Kiran P - [@raj_kiran_p](http://www.twitter.com/raj_kiran_p) - rajkiranjp@gmail.com   
+GitHub : [https://github.com/raj-kiran-p](https://github.com/raj-kiran-p)   
+Website : [https://rajkiranp.com](https://rajkiranp.com)
 
 
 <!-- ACKNOWLEDGEMENTS -->
