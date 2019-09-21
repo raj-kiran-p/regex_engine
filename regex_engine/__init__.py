@@ -1,5 +1,6 @@
-import re
+__version__ = "0.0.4"
 
+import re
 
 class regex_generator:
     def __compute_numerical_range(
@@ -128,78 +129,78 @@ class regex_generator:
         return ranges
 
 
-def numerical_range(self, a, b):
-    """
-    Generate regex for matching a number between a range.
-    The regex might not be optimal but it serves the purpose. 
-    
-    You get what you give.
-    ie, If you pass two floating number the regex can only match floating number,
-    else if you pass two integer number you can only mtach integer number.
-    """
-    # Handling floating point numbers
-    if (isinstance(a, (float)) and isinstance(b, (float, int))) or (
-        isinstance(a, (float, int)) and isinstance(b, (float))
-    ):
-        a, b = (a, b) if a < b else (b, a)
-        num_of_decimal_in_a = len(str(float(a))) - (str(float(a)).find(".") + 1)
-        num_of_decimal_in_b = len(str(float(b))) - (str(float(b)).find(".") + 1)
-        max_num_decimal = max(num_of_decimal_in_a, num_of_decimal_in_b)
+    def numerical_range(self, a, b):
+        """
+        Generate regex for matching a number between a range.
+        The regex might not be optimal but it serves the purpose. 
+        
+        You get what you give.
+        ie, If you pass two floating number the regex can only match floating number,
+        else if you pass two integer number you can only mtach integer number.
+        """
+        # Handling floating point numbers
+        if (isinstance(a, (float)) and isinstance(b, (float, int))) or (
+            isinstance(a, (float, int)) and isinstance(b, (float))
+        ):
+            a, b = (a, b) if a < b else (b, a)
+            num_of_decimal_in_a = len(str(float(a))) - (str(float(a)).find(".") + 1)
+            num_of_decimal_in_b = len(str(float(b))) - (str(float(b)).find(".") + 1)
+            max_num_decimal = max(num_of_decimal_in_a, num_of_decimal_in_b)
 
-        # Properly removing floating point and converting to integer
-        a, b = (
-            "".join([c for c in str(float(a)) if c != "."]),
-            "".join([c for c in str(float(b)) if c != "."]),
-        )
-        if len(str(a)) < len(str(b)):
-            a = a + f"{'0'*(max_num_decimal-num_of_decimal_in_a)}"
-        else:
-            b = b + f"{'0'*(max_num_decimal-num_of_decimal_in_b)}"
-        a, b = int(a), int(b)
-        a, b = (a, b) if a < b else (b, a)
+            # Properly removing floating point and converting to integer
+            a, b = (
+                "".join([c for c in str(float(a)) if c != "."]),
+                "".join([c for c in str(float(b)) if c != "."]),
+            )
+            if len(str(a)) < len(str(b)):
+                a = a + f"{'0'*(max_num_decimal-num_of_decimal_in_a)}"
+            else:
+                b = b + f"{'0'*(max_num_decimal-num_of_decimal_in_b)}"
+            a, b = int(a), int(b)
+            a, b = (a, b) if a < b else (b, a)
 
-        # Generate regex by treating float as integer
-        ranges = self.__range_splitter(a, b)
-        intermediate_regex = "|".join(
-            [
-                self.__compute_numerical_range(
-                    str(r[0]), str(r[1]), any_digit="[0-9]", start_appender_str=r[2]
+            # Generate regex by treating float as integer
+            ranges = self.__range_splitter(a, b)
+            intermediate_regex = "|".join(
+                [
+                    self.__compute_numerical_range(
+                        str(r[0]), str(r[1]), any_digit="[0-9]", start_appender_str=r[2]
+                    )
+                    for r in ranges
+                ]
+            )
+
+            # Modifying the integer supported regex to support float
+            new_regex = []
+            for p in intermediate_regex.split("|"):
+                x = [
+                    c for d in re.findall("-{0,1}(\d+)\[\d-\d\]*", p) for c in d
+                ] + re.findall("-{0,1}[\d]*(\[\d-\d\]*)", p)
+                # Example x = ['3', '2', '[0-1]', '[0-9]'] for p=32[0-1][0-9]
+                start_appender_str = "-" if re.findall("^-", p) else ""
+                # Add a decimal point inbetween, keep the next digit mandatory and others optional (32.[0-1][0-9]?[0-9]*)
+                mandatory_and_optional_part = (
+                    [x[-max_num_decimal]] + [z + "?" for z in x[-max_num_decimal + 1 :]]
+                    if max_num_decimal > 1
+                    else [z for z in x[-max_num_decimal:]]
                 )
-                for r in ranges
-            ]
-        )
+                new_regex.append(
+                    f"{start_appender_str}{''.join(x[:-max_num_decimal])}\.{''.join(mandatory_and_optional_part)}[0-9]*"
+                )
+            regex = f"^({'|'.join(new_regex)})$"
+            return regex
 
-        # Modifying the integer supported regex to support float
-        new_regex = []
-        for p in intermediate_regex.split("|"):
-            x = [
-                c for d in re.findall("-{0,1}(\d+)\[\d-\d\]*", p) for c in d
-            ] + re.findall("-{0,1}[\d]*(\[\d-\d\]*)", p)
-            # Example x = ['3', '2', '[0-1]', '[0-9]'] for p=32[0-1][0-9]
-            start_appender_str = "-" if re.findall("^-", p) else ""
-            # Add a decimal point inbetween, keep the next digit mandatory and others optional (32.[0-1][0-9]?[0-9]*)
-            mandatory_and_optional_part = (
-                [x[-max_num_decimal]] + [z + "?" for z in x[-max_num_decimal + 1 :]]
-                if max_num_decimal > 1
-                else [z for z in x[-max_num_decimal:]]
-            )
-            new_regex.append(
-                f"{start_appender_str}{''.join(x[:-max_num_decimal])}\.{''.join(mandatory_and_optional_part)}[0-9]*"
-            )
-        regex = f"^({'|'.join(new_regex)})$"
-        return regex
+        # Handling integer numbers
+        elif isinstance(a, (int)) and isinstance(b, (int)):
+            a, b = (a, b) if a < b else (b, a)
+            ranges = self.__range_splitter(a, b)
+            regex = f"^({'|'.join([self.__compute_numerical_range(str(r[0]),str(r[1]),any_digit='[0-9]',start_appender_str=r[2]) for r in ranges])})$"
+            return regex
 
-    # Handling integer numbers
-    elif isinstance(a, (int)) and isinstance(b, (int)):
-        a, b = (a, b) if a < b else (b, a)
-        ranges = self.__range_splitter(a, b)
-        regex = f"^({'|'.join([self.__compute_numerical_range(str(r[0]),str(r[1]),any_digit='[0-9]',start_appender_str=r[2]) for r in ranges])})$"
-        return regex
-
-    # Neither integer nor float
-    else:
-        raise (
-            Exception(
-                f"Unsupported data types for {a}:{type(a)} or {b}:{type(a)}, Only supported float/int"
+        # Neither integer nor float
+        else:
+            raise (
+                Exception(
+                    f"Unsupported data types for {a}:{type(a)} or {b}:{type(a)}, Only supported float/int"
+                )
             )
-        )
