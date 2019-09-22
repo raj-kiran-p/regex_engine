@@ -91,11 +91,11 @@ __You get what you give :__ If given numbers are integers you get a regex that w
 Supports integer and floating-point numbers. It can even be a negative range.
 
 ```python
-from regex_engine import regex_generator
-regex_obj = regex_generator()
-regex1 = regex_obj.numerical_range(5,89)
-regex2 = regex_obj.numerical_range(81.78,250.23)
-regex3 = regex_obj.numerical_range(-65,12)
+from regex_engine import generator
+generate = generator()
+regex1 = generate.numerical_range(5,89)
+regex2 = generate.numerical_range(81.78,250.23)
+regex3 = generate.numerical_range(-65,12)
 ```
 Example regex generated for 25-53
 ```
