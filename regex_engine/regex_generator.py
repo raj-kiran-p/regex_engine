@@ -53,9 +53,10 @@ class generator:
                     f"{start_appender_str}{str_a[:loop_counter+1]}[{str_a[-1]}-9]"
                 )
             else:
-                patterns.append(
-                    f"{start_appender_str}{str_a[:loop_counter+1]}[{int(str_a[loop_counter+1])+1}-9]{''.join([any_digit]*(loop_counter+1))}"
-                )
+                if str_a[loop_counter+1] != '9':  # if 599 then avoid 10 in '[6-8]...|5[10-9]..|59[9-9].|598[9-9]'
+                    patterns.append(
+                        f"{start_appender_str}{str_a[:loop_counter+1]}[{int(str_a[loop_counter+1])+1}-9]{''.join([any_digit]*(str_len-2-loop_counter))}"
+                    )
         # patterns for the above part ['1[7-9][0-9]','16[9-9]']
 
         # Case for str_b
@@ -65,9 +66,10 @@ class generator:
                     f"{start_appender_str}{str_b[:loop_counter+1]}[0-{str_b[-1]}]"
                 )
             else:
-                patterns.append(
-                    f"{start_appender_str}{str_b[:loop_counter+1]}[0-{int(str_b[loop_counter+1])-1}]{''.join([any_digit]*(loop_counter+1))}"
-                )
+                if str_b[loop_counter+1] != '0':  # if 1102 then avoid -1 in '11[0--1].|110[0-2]'
+                    patterns.append(
+                        f"{start_appender_str}{str_b[:loop_counter+1]}[0-{int(str_b[loop_counter+1])-1}]{''.join([any_digit]*(str_len-2-loop_counter))}"
+                    )
         # patterns for the above part ['5[0-3][0-9]','54[0-3]']
 
         return "|".join(patterns)
@@ -172,8 +174,8 @@ class generator:
             new_regex = []
             for p in intermediate_regex.split("|"):
                 x = [
-                    c for d in re.findall("-{0,1}(\d+)\[\d-\d\]*", p) for c in d
-                ] + re.findall("-{0,1}[\d]*(\[\d-\d\]*)", p)
+                    c for d in re.findall(r"-{0,1}(\d+)\[\d-\d\]*", p) for c in d
+                ] + re.findall(r"-{0,1}[\d]*(\[\d-\d\]*)", p)
                 # Example x = ['3', '2', '[0-1]', '[0-9]'] for p=32[0-1][0-9]
                 start_appender_str = "-" if re.findall("^-", p) else ""
                 # Add a decimal point inbetween, keep the next digit mandatory and others optional (32.[0-1][0-9]?[0-9]*)
