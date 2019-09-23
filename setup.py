@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="regex_engine",
-    version="0.1.0",
+    version="1.0.0",
     author="Raj Kiran P",
     author_email="rajkiranjp@gmail.com",
     description="Generate regex using python that can fit your needs",
