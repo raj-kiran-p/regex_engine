@@ -8,6 +8,7 @@ setuptools = "*"
 wheel = "*"
 twine = "*"
 bumpversion = "*"
+mkdocs = "*"
 
 [packages]
 
