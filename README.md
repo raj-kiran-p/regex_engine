@@ -17,6 +17,9 @@
   <h3 align="center">Regex Engine</h3>
   <p align="center">
     An awesome package to generate regex
+    <br>
+    <a href="https://regex-engine.readthedocs.io">Read Documentation</a>
+    <br>
     <a href="https://github.com/raj-kiran-p/regex_engine/issues">Report Bug</a>
     ·
     <a href="https://github.com/raj-kiran-p/regex_engine/issues">Request Feature</a>
