@@ -179,6 +179,11 @@ class generator:
                     x = [
                         c for d in re.findall(r"-{0,1}(\d+)\[\d-\d\]*", p) for c in d
                     ] + re.findall(r"-{0,1}[\d]*(\[\d-\d\]*)", p)
+
+                # If x = ['[0-9]'] and max_num_decimal = 2, We need x = ['0','[0-9]']
+                if len(x) < max_num_decimal:
+                    x = (['0']*(max_num_decimal-len(x))) + x
+
                 # Example x = ['3', '2', '[0-1]', '[0-9]'] for p=32[0-1][0-9]
                 start_appender_str = "-" if re.findall("^-", p) else ""
                 # Add a decimal point inbetween, keep the next digit mandatory and others optional (32.[0-1][0-9]?[0-9]*)
