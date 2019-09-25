@@ -18,7 +18,7 @@ class generator:
 
         # Three edge cases
         if str_a == str_b:
-            return str_a
+            return start_appender_str+str_a
         if str_len == 1:
             return f"{start_appender_str}[{str_a}-{str_b}]"
         # Counting index position till the characteres are equal
@@ -173,19 +173,23 @@ class generator:
             # Modifying the integer supported regex to support float
             new_regex = []
             for p in intermediate_regex.split("|"):
-                x = [
-                    c for d in re.findall(r"-{0,1}(\d+)\[\d-\d\]*", p) for c in d
-                ] + re.findall(r"-{0,1}[\d]*(\[\d-\d\]*)", p)
+                if p.find('[') == -1:
+                    x = [c for c in p if c != '-']
+                else:
+                    x = [
+                        c for d in re.findall(r"-{0,1}(\d+)\[\d-\d\]*", p) for c in d
+                    ] + re.findall(r"-{0,1}[\d]*(\[\d-\d\]*)", p)
                 # Example x = ['3', '2', '[0-1]', '[0-9]'] for p=32[0-1][0-9]
                 start_appender_str = "-" if re.findall("^-", p) else ""
                 # Add a decimal point inbetween, keep the next digit mandatory and others optional (32.[0-1][0-9]?[0-9]*)
-                mandatory_and_optional_part = (
+                fractional_part = (
                     [x[-max_num_decimal]] + [z + "?" for z in x[-max_num_decimal + 1 :]]
                     if max_num_decimal > 1
                     else [z for z in x[-max_num_decimal:]]
                 )
+                non_fractional_part = ''.join(x[:-max_num_decimal]) if ''.join(x[:-max_num_decimal]) else '0?'
                 new_regex.append(
-                    f"{start_appender_str}{''.join(x[:-max_num_decimal])}\.{''.join(mandatory_and_optional_part)}[0-9]*"
+                    f"{start_appender_str}{non_fractional_part}\.{''.join(fractional_part)}[0-9]*"
                 )
             regex = f"^({'|'.join(new_regex)})$"
             return regex
